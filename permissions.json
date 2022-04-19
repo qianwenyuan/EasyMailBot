@@ -1,0 +1,10 @@
+[
+    {
+        "resource": "Microsoft Graph",
+        "delegated": [
+            "User.Read",
+            "Mail.Read"
+        ],
+        "application": []
+    }
+]
