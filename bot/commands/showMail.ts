@@ -35,14 +35,16 @@ export class ShowMail extends SSOCommand {
       );
       // parse mail JSON
       const value = mail.value;
-      const id = value[0].id;
-      const sender = value[0].sender;
-      const emailAddress = sender.emailAddress;
-      await context.sendActivity(
-        `Your first mail (${value[0].subject}) was sent by ${emailAddress.name}` 
+      for (var mailnum=0; mailnum<value.length && mailnum<5; mailnum++) {
+        const id = value[mailnum].id;
+        const sender = value[mailnum].sender;
+        const emailAddress = sender.emailAddress;
+        await context.sendActivity(
+          `mail ${mailnum}: (${value[mailnum].subject}) was sent by ${emailAddress.name}` 
         //was sent by ${emailAddress.name} (${emailAddress.address}).`
-      );
+        );
       //await context.sendActivity({ attachments: [card] });
+      }
     }
     else {
       await context.sendActivity(

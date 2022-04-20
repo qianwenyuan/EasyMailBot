@@ -6,20 +6,19 @@ import {
 } from "@microsoft/teamsfx";
 import { SSOCommand } from "../helpers/botCommand";
 
-export class MailHelp extends SSOCommand {
+export class ListRules extends SSOCommand {
   constructor() {
     super();
-    this.matchPatterns = [/^\s*mail\s*help\s*/];
+    this.matchPatterns = [/^\s*list\s*rules\s*help\s*/];
     this.operationWithSSOToken = this.showMailHelp;
   }
 
   async showMailHelp(context: TurnContext, ssoToken: string) {
     // help information about commands
     await context.sendActivity(
-        "Here are mail methods:\n"+
-        "1.Enter \"list rules\" to get several list rule templates.\n"+
-        "2.Enter \"rule+X(Exp:rule 1)\" to set the Xth template as your mail list rule."+
-        "3.Enter \"mail\" to fetch the 5 most recent mail under the rule you set(default all)."  
+        "Here are mail list rules:\n"+
+        "rule 1: Get all the mails whose importance=high in past 48 hours.\n"+
+        "rule 2: Get all the mails sent by your teammates in past 48 hours.\n"
     );
   }
 }
