@@ -9,7 +9,7 @@ import { SSOCommand } from "../helpers/botCommand";
 export class ShowMail extends SSOCommand {
   constructor() {
     super();
-    this.matchPatterns = [/^\s*mail\s*/];
+  this.matchPatterns = [/^\s*listmail\s*/];
     this.operationWithSSOToken = this.showUserInfo;
   }
 
@@ -25,22 +25,26 @@ export class ShowMail extends SSOCommand {
     //const me = await graphClient.api("/me/messages").get();
     // get mail messages
     const mail = await graphClient.api("/me/messages")
-          .select('sender,subject')
+          .select('sender,receivedDateTime,bodyPreview,subject')
 	        .get();
 
     if (mail) {
       //const value = mail.value;
-      await context.sendActivity(
-        `Mail information: ${JSON.stringify(mail)}`
-      );
+      // await context.sendActivity(
+      //   `Mail information: ${JSON.stringify(mail)}`
+      // );
       // parse mail JSON
       const value = mail.value;
       for (var mailnum=0; mailnum<value.length && mailnum<5; mailnum++) {
         const id = value[mailnum].id;
         const sender = value[mailnum].sender;
         const emailAddress = sender.emailAddress;
+        const bodyPreview = value[mailnum].bodyPreview;
+        const receivedDateTime = value[mailnum].receivedDateTime;
+
         await context.sendActivity(
-          `mail ${mailnum}: (${value[mailnum].subject}) was sent by ${emailAddress.name}` 
+          `mail ${mailnum+1}: \'${value[mailnum].subject}\' was sent by ${emailAddress.name} at ${receivedDateTime}\n
+          Here is the preview: ${bodyPreview}` 
         //was sent by ${emailAddress.name} (${emailAddress.address}).`
         );
       //await context.sendActivity({ attachments: [card] });

@@ -9,7 +9,7 @@ import { SSOCommand } from "../helpers/botCommand";
 export class ListRules extends SSOCommand {
   constructor() {
     super();
-    this.matchPatterns = [/^\s*list\s*rules\s*help\s*/];
+    this.matchPatterns = [/^\s*listrule\s*help\s*/];
     this.operationWithSSOToken = this.showMailHelp;
   }
 

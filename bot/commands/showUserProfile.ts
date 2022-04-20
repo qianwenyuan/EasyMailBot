@@ -9,7 +9,7 @@ import { SSOCommand } from "../helpers/botCommand";
 export class ShowUserProfile extends SSOCommand {
   constructor() {
     super();
-    this.matchPatterns = [/^\s*show\s*/];
+  this.matchPatterns = [/^\s*show\s*/];
     this.operationWithSSOToken = this.showUserInfo;
   }
 
