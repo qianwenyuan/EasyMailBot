@@ -15,4 +15,4 @@ export const commands: BotCommand[] = [
   new MailHelp(),
   new ListRules(),
   new SetRules()
-];
+]

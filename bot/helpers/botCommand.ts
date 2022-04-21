@@ -1,5 +1,6 @@
 export type PredicateFunc<T> = (v: T) => boolean;
 export type MatchTerm = string | RegExp | PredicateFunc<string>;
+import { commonVar } from "../commands/common";
 
 export abstract class BotCommand {
   public matchPatterns: MatchTerm[];
@@ -11,6 +12,9 @@ export abstract class BotCommand {
   }
 
   public expressionMatchesText(userInput: string): RegExpExecArray | boolean {
+    // help SetRule class to get userInput
+    commonVar.setUserInput(userInput);
+    
     let matchResult: RegExpExecArray | boolean;
     for (const pattern of this.matchPatterns) {
       if (typeof pattern == "string") {

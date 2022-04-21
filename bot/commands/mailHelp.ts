@@ -18,7 +18,7 @@ export class MailHelp extends SSOCommand {
     await context.sendActivity(
         `Here are mail commands:\n
         1.Enter \"listrule\" to get several list rule templates.
-        2.Enter \"rule+X(Exp:rule 1)\" to set the Xth template as your mail list rule.
+        2.Enter \"setrule+X(Exp:rule 1)\" to set the Xth template as your mail list rule.
         3.Enter \"listmail\" to fetch the 5 most recent mail under the rule you set(default all).`  
     );
   }
