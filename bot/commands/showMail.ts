@@ -15,7 +15,7 @@ export class ShowMail extends SSOCommand {
   }
 
   async showUserInfo(context: TurnContext, ssoToken: string) {
-    await context.sendActivity("Retrieving mail information from Microsoft Graph ...");
+    await context.sendActivity("Retrieving mail information from Outlook ...");
 
     // Call Microsoft Graph half of user
     const teamsfx = new TeamsFx().setSsoToken(ssoToken);
@@ -25,18 +25,15 @@ export class ShowMail extends SSOCommand {
     // get userprofile
     //const me = await graphClient.api("/me/messages").get();
     // get mail messages
-    const mail = await graphClient.api("/me/messages")
-          .select('sender,receivedDateTime,importance,bodyPreview,subject')
+    // dont fetch all mails;
+    const mail = await graphClient.api("/me/messages?$top=10")
+          .select('sender,receivedDateTime,importance,isRead,bodyPreview,subject')
 	        .get();
 
     if (mail) {
-      //const value = mail.value;
-      // await context.sendActivity(
-      //   `Mail information: ${JSON.stringify(mail)}`
-      // );
       // parse mail JSON
       const value = mail.value;
-      if (commonVar.getRuleType()==1) {
+      if (commonVar.getRuleType()==1) { // rule 1: importance
         await context.sendActivity(`Under list rule 1:`)
         for (var mailnum=0, validnum=0; mailnum<value.length && validnum<5; mailnum++) {
           const id = value[mailnum].id;
@@ -56,23 +53,27 @@ export class ShowMail extends SSOCommand {
           }
         }
       }
-      else if (commonVar.getRuleType()==2) {
+      else if (commonVar.getRuleType()==2) { // rule 2: is Read & reverse time order
         await context.sendActivity(`Under list rule 2:`)
-        for (var mailnum=0; mailnum<value.length && mailnum<5; mailnum++) {
+        for (var mailnum=value.length-1, validnum=0; mailnum>=0 && validnum<5; mailnum--) {
           const id = value[mailnum].id;
           const sender = value[mailnum].sender;
           const emailAddress = sender.emailAddress;
+          const isRead = value[mailnum].isRead;
           const bodyPreview = value[mailnum].bodyPreview;
           const receivedDateTime = value[mailnum].receivedDateTime;
 
-          await context.sendActivity(
-            `mail ${mailnum+1}: \'${value[mailnum].subject}\' was sent by ${emailAddress.name} at ${receivedDateTime}\n
-            Here is the preview: ${bodyPreview}` 
-            //was sent by ${emailAddress.name} (${emailAddress.address}).`
-          );
+          if (!isRead) {
+            validnum++;
+            await context.sendActivity(
+              `mail ${validnum}: \'${value[mailnum].subject}\' was sent by ${emailAddress.name} at ${receivedDateTime}\n
+              Here is the preview: ${bodyPreview}` 
+              //was sent by ${emailAddress.name} (${emailAddress.address}).`
+            );
+          }
         }
       }
-      else if (commonVar.getRuleType()==0) {
+      else if (commonVar.getRuleType()==0) { // rule 0: No rule
         await context.sendActivity(`Under list rule 0:`)
         for (var mailnum=0; mailnum<value.length && mailnum<5; mailnum++) {
           const id = value[mailnum].id;

@@ -21,7 +21,7 @@ export class ListRules extends SSOCommand {
         (Current rule type = ${commonVar.getRuleType()})\n
         rule 0: No rule. Get the most recent 5 mails.
         rule 1: Get all the mails whose importance=high.
-        rule 2: Get all the mails sent by your teammates.
+        rule 2: Sort all the unread mails by reverse received time order.
         `
     );
   }
